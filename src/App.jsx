@@ -89,9 +89,9 @@ export default function App() {
               link: "https://mensalink.com.br"
             },
             {
-              name: "Shopee Tracking",
+              name: "Shopee Xpress",
               img: "/shopee-logo.png",
-              desc: "Planilhas com análise de performance logística"
+              desc: "Planilhas com análise logística e Tracking de Perfomance"
             }
           ].map((p, i) => (
             <motion.div key={i} whileHover={{ scale: 1.03 }}
