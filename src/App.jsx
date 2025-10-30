@@ -83,6 +83,12 @@ export default function App() {
         <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
           {[
             {
+              name: "ENCONTRAVAGAS.RIO",
+              img: "/encontravagas-logo.png",
+              desc: "Site de vagas e oportunidades do Rio de Janeiro",
+              link: "https://encontravagas.rio"
+            },
+            {
               name: "MensaLink",
               img: "/mensalink.png",
               desc: "SaaS de gestão de pagamentos escolares",
