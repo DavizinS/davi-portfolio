@@ -1,9 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import "./App.css";
 
-/* ═══════════════════════════════════════════════════════════
-   DADOS — edite aqui sem mexer no JSX
-═══════════════════════════════════════════════════════════ */
+/*SKILLS*/
 const SKILLS = [
   {
     id: "csharp",
@@ -136,9 +134,7 @@ const SOCIALS = [
   },
 ];
 
-/* ═══════════════════════════════════════════════════════════
-   HOOK — Partículas de código no canvas
-═══════════════════════════════════════════════════════════ */
+/*particulas do canva*/
 function useParticles(canvasRef) {
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -189,9 +185,7 @@ function useParticles(canvasRef) {
   }, [canvasRef]);
 }
 
-/* ═══════════════════════════════════════════════════════════
-   HOOK — Cursor personalizado
-═══════════════════════════════════════════════════════════ */
+/*cursor*/
 function useCursor(cursorRef) {
   useEffect(() => {
     const cur = cursorRef.current;
@@ -225,9 +219,7 @@ function useCursor(cursorRef) {
   }, [cursorRef]);
 }
 
-/* ═══════════════════════════════════════════════════════════
-   HOOK — Scroll reveal
-═══════════════════════════════════════════════════════════ */
+
 function useReveal() {
   useEffect(() => {
     const els = document.querySelectorAll(".reveal");
@@ -242,9 +234,7 @@ function useReveal() {
   }, []);
 }
 
-/* ═══════════════════════════════════════════════════════════
-   COMPONENTE — Navbar
-═══════════════════════════════════════════════════════════ */
+
 function Navbar() {
   const [open, setOpen] = useState(false);
   const close = () => setOpen(false);
@@ -275,9 +265,7 @@ function Navbar() {
   );
 }
 
-/* ═══════════════════════════════════════════════════════════
-   COMPONENTE — Hero
-═══════════════════════════════════════════════════════════ */
+
 function Hero() {
   return (
     <section id="hero" className="hero">
@@ -302,9 +290,7 @@ function Hero() {
   );
 }
 
-/* ═══════════════════════════════════════════════════════════
-   COMPONENTE — Skills
-═══════════════════════════════════════════════════════════ */
+//minhas skills
 function Skills() {
   return (
     <section id="skills" className="skills-bg">
@@ -345,9 +331,7 @@ function Skills() {
   );
 }
 
-/* ═══════════════════════════════════════════════════════════
-   COMPONENTE — Projetos
-═══════════════════════════════════════════════════════════ */
+
 function Projects() {
   return (
     <section id="projetos" className="projects-bg">
@@ -398,9 +382,7 @@ function ProjectLogo({ img, alt, Fallback }) {
   );
 }
 
-/* ═══════════════════════════════════════════════════════════
-   COMPONENTE — Sobre
-═══════════════════════════════════════════════════════════ */
+
 function Sobre() {
   const [photoError, setPhotoError] = useState(false);
 
@@ -472,27 +454,36 @@ function Sobre() {
   );
 }
 
-/* ═══════════════════════════════════════════════════════════
-   COMPONENTE — Formulário de contato
-═══════════════════════════════════════════════════════════ */
+
+const WA_NUMBER = "5521959294663";
+
+function buildWhatsAppUrl({ name, subject, email, message }) {
+  const subjectLabel = subject || "Assunto não especificado";
+  const text =
+    `Olá, me chamo *${name}*.\n` +
+    `Vim aqui para tratar do assunto: *${subjectLabel}*\n\n` +
+    `${message}\n\n` +
+    `📧 E-mail para retorno: ${email}`;
+  return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`;
+}
+
 function Contato() {
   const [form, setForm]     = useState({ name: "", email: "", subject: "", message: "" });
-  const [status, setStatus] = useState(null); // null | "loading" | "success" | "error"
+  const [status, setStatus] = useState(null);
 
   const set = (field) => (e) => setForm((prev) => ({ ...prev, [field]: e.target.value }));
 
-  async function handleSubmit(e) {
+  function handleSubmit(e) {
     e.preventDefault();
-    if (!form.name || !form.email || !form.message) {
-      setStatus("error"); return;
+
+    //Validação
+    if (!form.name.trim() || !form.email.trim() || !form.message.trim()) {
+      setStatus("error");
+      return;
     }
-    setStatus("loading");
 
-    // ── Troque o setTimeout pelo seu fetch real aqui ──
-    await new Promise((r) => setTimeout(r, 1300));
-    console.log("[ContactForm]", form);
-    // ─────────────────────────────────────────────────
-
+    const url = buildWhatsAppUrl(form);
+    window.open(url, "_blank", "noopener,noreferrer");
     setStatus("success");
     setForm({ name: "", email: "", subject: "", message: "" });
     setTimeout(() => setStatus(null), 5000);
@@ -568,29 +559,16 @@ function Contato() {
 
             <div className="form-submit">
               <div>
-                <p className="form-note">// Backend pronto para conectar.</p>
+                <p className="form-note">// Abre o WhatsApp com a mensagem pronta.</p>
                 {status === "success" && (
-                  <p className="form-status success">// Mensagem recebida! Retorno em breve.</p>
+                  <p className="form-status success">// WhatsApp aberto! Só enviar a mensagem. ✓</p>
                 )}
                 {status === "error" && (
                   <p className="form-status error">// Preencha nome, e-mail e mensagem.</p>
                 )}
               </div>
-              <button type="submit" className="btn-primary" disabled={status === "loading"}>
-                {status === "loading" ? (
-                  <>
-                    <svg
-                      width="14" height="14" viewBox="0 0 24 24"
-                      fill="none" stroke="currentColor" strokeWidth="2.5"
-                      className="spin"
-                    >
-                      <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4" />
-                    </svg>
-                    Enviando…
-                  </>
-                ) : (
-                  <><IconSend /> Enviar</>
-                )}
+              <button type="submit" className="btn-primary">
+                <IconSend /> Enviar via WhatsApp
               </button>
             </div>
           </form>
@@ -606,9 +584,7 @@ function Contato() {
   );
 }
 
-/* ═══════════════════════════════════════════════════════════
-   ÍCONES INLINE (sem dependência externa)
-═══════════════════════════════════════════════════════════ */
+
 function IconArrow() {
   return (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -624,9 +600,7 @@ function IconSend() {
   );
 }
 
-/* ═══════════════════════════════════════════════════════════
-   APP ROOT
-═══════════════════════════════════════════════════════════ */
+
 export default function App() {
   const canvasRef = useRef(null);
   const cursorRef = useRef(null);
