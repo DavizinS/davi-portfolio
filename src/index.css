@@ -2,50 +2,219 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ═══════════════════════════════════════════════════════════
+   FONTS
+═══════════════════════════════════════════════════════════ */
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap');
+
+/* ═══════════════════════════════════════════════════════════
+   DESIGN TOKENS  — Davi Santos Portfolio
+═══════════════════════════════════════════════════════════ */
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
+  /* Backgrounds */
+  --bg:       #080a0f;
+  --bg1:      #0d1017;
+  --bg2:      #111520;
+  --surface:  #141926;
+
+  /* Borders */
+  --border:   rgba(255, 255, 255, 0.07);
+  --border-md: rgba(255, 255, 255, 0.12);
+
+  /* Brand colors */
+  --amber:    #f5a623;
+  --amber2:   #ff7f36;
+  --teal:     #3ce8cc;
+  --danger:   #f87171;
+  --success:  #3ce8cc;
+
+  /* Foreground */
+  --fg:       #e8eaf0;
+  --fg2:      rgba(232, 234, 240, 0.55);
+  --fg3:      rgba(232, 234, 240, 0.28);
+
+  /* Typography */
+  --font-mono:  'DM Mono', monospace;
+  --font-serif: 'DM Serif Display', serif;
+  --font-sans:  'Syne', system-ui, sans-serif;
+
+  /* Spacing scale */
+  --space-xs:  0.35rem;
+  --space-sm:  0.65rem;
+  --space-md:  1.25rem;
+  --space-lg:  2.5rem;
+  --space-xl:  5rem;
+  --space-2xl: 7rem;
+
+  /* Radii */
+  --radius-sm: 0.35rem;
+  --radius-md: 0.65rem;
+  --radius-lg: 0.75rem;
+
+  /* Base (compatibilidade Vite) */
+  font-family: var(--font-sans);
+  line-height: 1.6;
   font-weight: 400;
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
+  color-scheme: dark;
+  color: var(--fg);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* ═══════════════════════════════════════════════════════════
+   RESET / BASE
+═══════════════════════════════════════════════════════════ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
 html, body {
   overflow-x: hidden;
   width: 100%;
-  margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  background: var(--bg);
+  color: var(--fg);
 }
 
+body {
+  font-family: var(--font-sans);
+}
+
+img, svg {
+  display: block;
+  max-width: 100%;
+}
+
+::selection {
+  background: var(--amber);
+  color: #000;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   LINKS
+═══════════════════════════════════════════════════════════ */
 a {
   font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+  color: var(--amber);
+  text-decoration: none;
+  transition: color 0.2s;
 }
 a:hover {
-  color: #535bf2;
+  color: var(--amber2);
 }
 
+/* ═══════════════════════════════════════════════════════════
+   BUTTONS — substituindo os defaults do Vite
+═══════════════════════════════════════════════════════════ */
 button {
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+  font-family: var(--font-sans);
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: border-color 0.25s, background 0.2s, transform 0.15s;
 }
 button:hover {
-  border-color: #646cff;
+  border-color: var(--amber);
 }
 button:focus,
 button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  outline: 2px solid var(--amber);
+  outline-offset: 3px;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   NOISE TEXTURE — overlay sutil em todo o site
+═══════════════════════════════════════════════════════════ */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CANVAS DE PARTÍCULAS (fixo, no fundo)
+═══════════════════════════════════════════════════════════ */
+#particles {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.35;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CURSOR PERSONALIZADO
+═══════════════════════════════════════════════════════════ */
+#cursor {
+  position: fixed;
+  z-index: 9999;
+  pointer-events: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--amber);
+  mix-blend-mode: difference;
+  transform: translate(-50%, -50%);
+  transition: width 0.2s, height 0.2s, opacity 0.2s;
+}
+#cursor.big {
+  width: 40px;
+  height: 40px;
+  opacity: 0.35;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ANIMAÇÕES DE REVEAL (scroll)
+═══════════════════════════════════════════════════════════ */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: none;
+}
+.reveal:nth-child(1) { transition-delay: 0ms; }
+.reveal:nth-child(2) { transition-delay: 80ms; }
+.reveal:nth-child(3) { transition-delay: 160ms; }
+.reveal:nth-child(4) { transition-delay: 240ms; }
+
+/* Entrada do Hero */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: none; }
+}
+.hero-eyebrow { animation: fadeUp 0.6s ease both; animation-delay: 0.1s; }
+.hero-name    { animation: fadeUp 0.6s ease both; animation-delay: 0.25s; }
+.hero-desc    { animation: fadeUp 0.6s ease both; animation-delay: 0.4s; }
+.hero-cta-row { animation: fadeUp 0.6s ease both; animation-delay: 0.55s; }
+
+/* Loading spinner */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.spin { animation: spin 0.7s linear infinite; }
+
+/* Scroll indicator bounce */
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%       { transform: translateX(-50%) translateY(6px); }
 }
