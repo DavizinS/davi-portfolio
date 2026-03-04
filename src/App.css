@@ -528,8 +528,10 @@
   background: var(--surface);
 }
 .sobre-photo-wrap img {
-  width: 100%; height: 100%;
-  object-fit: cover; object-position: top;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
   display: block;
 }
 .sobre-photo-placeholder {
@@ -776,6 +778,8 @@
   .form-row { grid-template-columns: 1fr; }
 
   .footer-bottom { flex-direction: column; text-align: center; gap: 0.5rem; }
+
+  .sobre-photo-wrap img { object-position: center 35%; }
 }
 
 @media (max-width: 480px) {

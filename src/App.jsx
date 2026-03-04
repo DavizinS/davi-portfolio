@@ -407,7 +407,7 @@ function Sobre() {
                     <circle cx="12" cy="8" r="4" />
                     <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
                   </svg>
-                  <span>Adicione sua foto:<br />/avatar.png</span>
+                  <span>AMinha foto<br />/avatar.png</span>
                 </div>
               )}
               <div className="sobre-photo-glow" />
