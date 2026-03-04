@@ -463,7 +463,7 @@ function buildWhatsAppUrl({ name, subject, email, message }) {
     `Olá, me chamo *${name}*.\n` +
     `Vim aqui para tratar do assunto: *${subjectLabel}*\n\n` +
     `${message}\n\n` +
-    `📧 E-mail para retorno: ${email}`;
+    `E-mail para retorno: ${email}`;
   return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`;
 }
 
@@ -507,7 +507,7 @@ function Contato() {
             <div className="contact-direct reveal">
               {SOCIALS.map(({ label, href, icon }) => (
                 <a key={label} href={href} target="_blank" rel="noreferrer" className="contact-direct-item">
-                  {icon} {label === "WhatsApp" ? "+55 (21) 95928-0486" : label === "LinkedIn" ? "linkedin.com/in/davisantosrj" : "@dev.davirj"}
+                  {icon} {label === "WhatsApp" ? "+55 (21) 95929-4663" : label === "LinkedIn" ? "linkedin.com/in/davisantosrj" : "@dev.davirj"}
                 </a>
               ))}
             </div>
@@ -559,9 +559,9 @@ function Contato() {
 
             <div className="form-submit">
               <div>
-                <p className="form-note">// Abre o WhatsApp com a mensagem pronta.</p>
+                <p className="form-note">// Vai entrar em contato pelo Whatsapp.</p>
                 {status === "success" && (
-                  <p className="form-status success">// WhatsApp aberto! Só enviar a mensagem. ✓</p>
+                  <p className="form-status success">// Pronto! Agora é só enviar a mensagem. ✓</p>
                 )}
                 {status === "error" && (
                   <p className="form-status error">// Preencha nome, e-mail e mensagem.</p>
