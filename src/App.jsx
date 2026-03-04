@@ -576,7 +576,7 @@ function Contato() {
 
         {/* Footer */}
         <div className="footer-bottom">
-          <p className="footer-copy">© 2025 DAVI SANTOS — TODOS OS DIREITOS RESERVADOS</p>
+          <p className="footer-copy">© 2026 DAVI SANTOS — TODOS OS DIREITOS RESERVADOS</p>
           <p className="footer-built">Construído com <span>curiosidade</span> &amp; café</p>
         </div>
       </div>
