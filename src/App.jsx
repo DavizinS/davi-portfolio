@@ -473,7 +473,7 @@ function Contato() {
 
   const set = (field) => (e) => setForm((prev) => ({ ...prev, [field]: e.target.value }));
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
 
     //Validação
@@ -482,11 +482,27 @@ function Contato() {
       return;
     }
 
-    const url = buildWhatsAppUrl(form);
-    window.open(url, "_blank", "noopener,noreferrer");
-    setStatus("success");
-    setForm({ name: "", email: "", subject: "", message: "" });
-    setTimeout(() => setStatus(null), 5000);
+    setStatus("loading");
+    try {
+      const resposta = await fetch("http://localhost:8080/api/contato", {
+        method: "POST",
+        headers: { "Content-Type": "application/json"},
+        body: JSON.stringify(form),
+      });
+
+      const dados = await resposta.json();
+
+      if(resposta.ok) {
+        setStatus("success");
+        setForm({name: "", email: "", subject: "", message: ""})
+        setTimeout(() => setStatus(null), 5000);
+      } else {
+        setStatus("error");
+      }
+
+    } catch(erro) {
+        setStatus("error");
+      }
   }
 
   return (
@@ -559,16 +575,23 @@ function Contato() {
 
             <div className="form-submit">
               <div>
-                <p className="form-note">// Vai entrar em contato pelo Whatsapp.</p>
+                <p className="form-note">// Preparado para enviar? Haha.</p>
+                {status === "loading" && (
+                  <p className="form-status loading"> // Aguarda só um pouquinho que está carregando...</p>
+                )}
                 {status === "success" && (
-                  <p className="form-status success">// Pronto! Agora é só enviar a mensagem. ✓</p>
+                  <p className="form-status success">// Pronto! Você não vai se arrepender rs.</p>
                 )}
                 {status === "error" && (
                   <p className="form-status error">// Preencha nome, e-mail e mensagem.</p>
                 )}
               </div>
-              <button type="submit" className="btn-primary">
-                <IconSend /> Enviar via WhatsApp
+              <button 
+                type="submit" 
+                className="btn-primary"
+                disabled={status === "loading"}
+              >
+                <IconSend /> {status === "loading" ? "Enviando...": "Enviar formulário."}
               </button>
             </div>
           </form>
