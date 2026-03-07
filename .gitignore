@@ -25,5 +25,4 @@ dist-ssr
 /portfolio-backend/target/
 
 
-application-local.properties
 application.properties
