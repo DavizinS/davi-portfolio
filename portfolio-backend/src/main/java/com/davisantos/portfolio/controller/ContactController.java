@@ -10,7 +10,8 @@ import java.util.Map;
 @RequestMapping("/api")
 @CrossOrigin(origins = {
     "http://localhost:5173",
-    "https://davisantosrj.vercel.app"
+    "https://davisantosrj.vercel.app",
+    "https://dbdavirj.up.railway.app"
 })
 public class ContactController {
     
