@@ -1,10 +1,13 @@
 package com.davisantos.portfolio.service;
 
+import com.resend.Resend;
+import com.resend.core.exception.ResendException;
+import com.resend.services.emails.model.CreateEmailOptions;
+import com.resend.services.emails.model.CreateEmailResponse;
 import com.davisantos.portfolio.Contact;
 import com.davisantos.portfolio.dto.ContactRequest;
 import com.davisantos.portfolio.repository.ContactRepository;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 
@@ -12,11 +15,12 @@ import org.springframework.stereotype.Service;
 public class ContactService {
     
     private final ContactRepository contactRepository;
-    private final JavaMailSender mailSender;
     
-    public ContactService(ContactRepository contactRepository, JavaMailSender mailSender) {
+    @Value("${resend.api.key}")
+    private String resendApiKey;
+    
+    public ContactService(ContactRepository contactRepository) {
         this.contactRepository = contactRepository;
-        this.mailSender = mailSender;
     }
     
     
@@ -31,16 +35,20 @@ public class ContactService {
         
         contactRepository.save(contact);
         
-        //email
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo("dev.davirj@gmail.com");
-        message.setSubject("Novo contato: " + req.getAssunto());
-        message.setText(
-            "Nome: " + req.getName() + "\n" +
-            "Email: " + req.getEmail() + "\n" +
-            "Assunto: " + req.getAssunto() + "\n" + req.getDescricao()
-        );
-        mailSender.send(message);
+        try {
+            Resend resend = new Resend(resendApiKey);
+            
+            CreateEmailOptions params = CreateEmailOptions.builder()
+                    .from("Portfólio <onboarding@resend.dev>")
+                    .to("dev.davirj@gmail.com")
+                    .subject("Novo contato: " + req.getAssunto())
+                    .html("<h3>Nome: " + req.getName() + "</h3>" +
+                      "<p>Email: " + req.getEmail() + "</p>" +
+                      "<p>Assunto: " + req.getAssunto() + "</p>" +
+                      "<p>" + req.getDescricao() + "</p>")
+                    .build();
+        }
+
         
         // ---- LOG ---- //
         System.out.println("====== LEAD NOVO  ========");
