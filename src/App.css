@@ -767,7 +767,7 @@
 
   .sobre-grid { grid-template-columns: 1fr; gap: 3rem; }
   .sobre-stats { grid-template-columns: 1fr 1fr; }
-  .sobre-photo-wrap { max-width: 100%; aspect-ratio: 4/3; }
+  .sobre-photo-wrap { max-width: 100%; aspect-ratio: 1/1.5; }
 
   .project-item { grid-template-columns: 1fr; }
   .project-logo-wrap { display: none; }

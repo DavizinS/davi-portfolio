@@ -457,18 +457,10 @@ function Sobre() {
 
 const WA_NUMBER = "5521959294663";
 
-function buildWhatsAppUrl({ name, subject, email, message }) {
-  const subjectLabel = subject || "Assunto não especificado";
-  const text =
-    `Olá, me chamo *${name}*.\n` +
-    `Vim aqui para tratar do assunto: *${subjectLabel}*\n\n` +
-    `${message}\n\n` +
-    `E-mail para retorno: ${email}`;
-  return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`;
-}
+
 
 function Contato() {
-  const [form, setForm]     = useState({ name: "", email: "", subject: "", message: "" });
+  const [form, setForm]     = useState({ name: "", email: "", assunto: "", descricao: "" });
   const [status, setStatus] = useState(null);
 
   const set = (field) => (e) => setForm((prev) => ({ ...prev, [field]: e.target.value }));
@@ -477,7 +469,7 @@ function Contato() {
     e.preventDefault();
 
     //Validação
-    if (!form.name.trim() || !form.email.trim() || !form.message.trim()) {
+    if (!form.name.trim() || !form.email.trim() || !form.descricao.trim()) {
       setStatus("error");
       return;
     }
@@ -494,7 +486,7 @@ function Contato() {
 
       if(resposta.ok) {
         setStatus("success");
-        setForm({name: "", email: "", subject: "", message: ""})
+        setForm({name: "", email: "", assunto: "", descricao: ""})
         setTimeout(() => setStatus(null), 5000);
       } else {
         setStatus("error");
@@ -554,7 +546,7 @@ function Contato() {
               <label className="form-label" htmlFor="cf-subject">Assunto</label>
               <select
                 className="form-select" id="cf-subject"
-                value={form.subject} onChange={set("subject")}
+                value={form.assunto} onChange={set("assunto")}
               >
                 <option value="">Selecione um assunto…</option>
                 <option value="freelance">Projeto Freelance</option>
@@ -569,7 +561,7 @@ function Contato() {
               <textarea
                 className="form-textarea" id="cf-msg"
                 placeholder="Me conta sobre seu projeto ou oportunidade…"
-                value={form.message} onChange={set("message")} required
+                value={form.descricao} onChange={set("descricao")} required
               />
             </div>
 
