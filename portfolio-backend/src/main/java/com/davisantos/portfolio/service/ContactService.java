@@ -62,7 +62,7 @@ public class ContactService {
             CreateEmailOptions params = CreateEmailOptions.builder()
                     .from("Portfólio <onboarding@resend.dev>")
                     .to("dev.davirj@gmail.com")
-                    .subject("Novo contato: " + req.getAssunto())
+                    .subject("NOVO CONTATO: " + req.getAssunto())
                     .html(templateDoEmail)
                     .build();
             CreateEmailResponse response = resend.emails().send(params);
