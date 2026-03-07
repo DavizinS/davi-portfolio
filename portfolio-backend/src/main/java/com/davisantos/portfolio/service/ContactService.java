@@ -43,10 +43,14 @@ public class ContactService {
                     .to("dev.davirj@gmail.com")
                     .subject("Novo contato: " + req.getAssunto())
                     .html("<h3>Nome: " + req.getName() + "</h3>" +
-                      "<p>Email: " + req.getEmail() + "</p>" +
-                      "<p>Assunto: " + req.getAssunto() + "</p>" +
-                      "<p>" + req.getDescricao() + "</p>")
+                        "<p>Email: " + req.getEmail() + "</p>" +
+                        "<p>Assunto: " + req.getAssunto() + "</p>" +
+                        "<p>" + req.getDescricao() + "</p>")
                     .build();
+            CreateEmailResponse response = resend.emails().send(params);
+            System.out.println("Email enviado! ID: " + response.getId());
+        } catch(ResendException e) {
+            System.err.println("Erro ao enviar email: " + e.getMessage());
         }
 
         
