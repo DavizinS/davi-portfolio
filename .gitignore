@@ -23,3 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 /portfolio-backend/target/
+
+
+application-local.properties
+application.properties
