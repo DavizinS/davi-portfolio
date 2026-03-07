@@ -7,4 +7,12 @@
                 <goal>spring-boot:run</goal>
             </goals>
         </action>
+        <action>
+            <actionName>CUSTOM-rodar cdclocal</actionName>
+            <displayName>rodar cdclocal</displayName>
+            <goals>
+                <goal>spring-boot:run</goal>
+                <goal>-Dspring-boot.run.profiles=local</goal>
+            </goals>
+        </action>
     </actions>
