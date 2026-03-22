@@ -1,9 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import "./App.css";
 
-/* ─────────────────────────────────────────────
-   DATA
-───────────────────────────────────────────── */
+/*Infos */
 const SKILLS = [
   {
     id: "reactjs", label: <IconReact />, name: "React", area: "front",
@@ -49,6 +47,11 @@ const PROJECTS = [
     tech: ["Next.js", "TypeScript", "PostgreSQL", "Vercel"],
     link: "https://encontravagas.rio",
     img: "/encontravagas-logo.png",
+    photos: [
+      "/projects/encontravagas/1.webp",
+      "/projects/encontravagas/2.webp",
+      "/projects/encontravagas/3.webp",
+    ],
     LogoFallback: () => (
       <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: "3rem", height: "3rem" }}>
         <rect width="60" height="60" rx="12" fill="rgba(19,51,90,0.6)" />
@@ -64,6 +67,11 @@ const PROJECTS = [
     tech: ["C# / .NET", "PostgreSQL", "Automação"],
     link: "https://mensalink.com.br",
     img: "/mensalink.png",
+    photos: [
+      "/projects/mensalink/1.webp",
+      "/projects/mensalink/2.webp",
+      "/projects/mensalink/3.webp",
+    ],
     LogoFallback: () => (
       <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: "3rem", height: "3rem" }}>
         <rect width="60" height="60" rx="12" fill="rgba(60,232,204,0.08)" />
@@ -78,6 +86,7 @@ const PROJECTS = [
     tech: ["Python", "Excel/VBA", "Análise de dados"],
     link: null,
     img: "/shopee-logo.png",
+    photos: [],
     LogoFallback: () => (
       <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: "2.2rem", height: "2.2rem" }}>
         <rect width="60" height="60" rx="12" fill="rgba(249,115,22,0.08)" />
@@ -105,9 +114,7 @@ const SOCIALS = [
   },
 ];
 
-/* ─────────────────────────────────────────────
-   SERVIÇOS DATA
-───────────────────────────────────────────── */
+/* Meu servicos */
 const SERVICOS = [
   {
     id: "landing",
@@ -166,9 +173,7 @@ const SERVICOS = [
   },
 ];
 
-/* ─────────────────────────────────────────────
-   CALCULADORA DATA
-───────────────────────────────────────────── */
+/*Calculadora */
 const CALC_SERVICOS = [
   {
     id: "landing",
@@ -205,9 +210,7 @@ const CALC_SERVICOS = [
   },
 ];
 
-/* ─────────────────────────────────────────────
-   HOOKS
-───────────────────────────────────────────── */
+/* Hooks */
 function useParticles(canvasRef) {
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -300,9 +303,29 @@ function useNavScroll() {
   return scrolled;
 }
 
-/* ─────────────────────────────────────────────
-   HELPERS
-───────────────────────────────────────────── */
+function useActiveSection() {
+  const [active, setActive] = useState("hero");
+  useEffect(() => {
+    const ids = ["hero", "skills", "servicos", "projetos", "sobre", "contato"];
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) setActive(entry.target.id);
+        });
+      },
+      { rootMargin: "-40% 0px -55% 0px" }
+    );
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) obs.observe(el);
+    });
+    return () => obs.disconnect();
+  }, []);
+  return active;
+}
+
+/* Helpers */
+
 function calcPrice(servico, rangeVal) {
   const t = rangeVal / 100;
   const raw = servico.min + (servico.max - servico.min) * t;
@@ -317,24 +340,36 @@ function formatCurrency(val) {
   return val.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
 
-/* ─────────────────────────────────────────────
-   NAVBAR
-───────────────────────────────────────────── */
+/* Nav */
+const NAV_LINKS = [
+  { href: "#skills",    label: "Skills",    id: "skills"    },
+  { href: "#servicos",  label: "Serviços",  id: "servicos"  },
+  { href: "#projetos",  label: "Projetos",  id: "projetos"  },
+  { href: "#sobre",     label: "Sobre",     id: "sobre"     },
+  { href: "#contato",   label: "Contato",   id: "contato"   },
+];
+
 function Navbar() {
   const [open, setOpen] = useState(false);
   const scrolled = useNavScroll();
+  const active = useActiveSection();
   const close = () => setOpen(false);
+
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [open]);
 
   return (
     <>
       <nav className={`nav${scrolled ? " nav--scrolled" : ""}`}>
         <a href="#hero" className="nav-logo">davi.dev</a>
         <ul className="nav-links">
-          <li><a href="#skills"   onClick={close}>Skills</a></li>
-          <li><a href="#servicos" onClick={close}>Serviços</a></li>
-          <li><a href="#projetos" onClick={close}>Projetos</a></li>
-          <li><a href="#sobre"    onClick={close}>Sobre</a></li>
-          <li><a href="#contato"  onClick={close}>Contato</a></li>
+          {NAV_LINKS.map(({ href, label, id }) => (
+            <li key={id}>
+              <a href={href} className={active === id ? "nav-link--active" : ""}>{label}</a>
+            </li>
+          ))}
         </ul>
         <div className="nav-right">
           {scrolled && (
@@ -349,13 +384,11 @@ function Navbar() {
       </nav>
 
       <div className={`nav-mobile-menu${open ? " open" : ""}`}>
-        <button className="nav-mobile-close" onClick={close}>✕</button>
-        <a href="#skills"   onClick={close}>Skills</a>
-        <a href="#servicos" onClick={close}>Serviços</a>
-        <a href="#projetos" onClick={close}>Projetos</a>
-        <a href="#sobre"    onClick={close}>Sobre</a>
-        <a href="#contato"  onClick={close}>Contato</a>
-        <a href="#contato"  onClick={close} className="btn-primary" style={{ marginTop: "1rem" }}>
+        <button className="nav-mobile-close" onClick={close} aria-label="Fechar menu">✕</button>
+        {NAV_LINKS.map(({ href, label, id }) => (
+          <a key={id} href={href} onClick={close} className={active === id ? "nav-link--active" : ""}>{label}</a>
+        ))}
+        <a href="#contato" onClick={close} className="btn-primary" style={{ marginTop: "1rem" }}>
           Solicitar orçamento
         </a>
       </div>
@@ -387,7 +420,16 @@ function Hero() {
           <a href="#servicos" className="btn-primary">
             <IconArrow /> Ver serviços &amp; preços
           </a>
-          <a href="#projetos" className="btn-ghost">Ver projetos</a>
+          <a href="#projetos" className="btn-ghost">Ver o que já construí</a>
+        </div>
+
+        <div className="hero-projects-hint">
+          <span className="hero-hint-label">// trabalho recente</span>
+          <div className="hero-hint-chips">
+            {PROJECTS.map(p => (
+              <a key={p.id} href="#projetos" className="hero-hint-chip">{p.name}</a>
+            ))}
+          </div>
         </div>
 
         {/* Trust bar */}
@@ -475,11 +517,18 @@ function Servicos() {
 
   const setRange = (id, val) => setRanges(prev => ({ ...prev, [id]: Number(val) }));
 
+  const [ativos, setAtivos] = useState({ landing: false, institucional: false, sistema: false });
+
+  const toggleAtivo = (id) => setAtivos(prev => ({ ...prev, [id]: !prev[id] }));
+
+  const servicosAtivos = CALC_SERVICOS.filter(s => ativos[s.id]);
+
   const handleOrcamento = () => {
     const selectEl = document.getElementById("cf-subject");
     if (selectEl) selectEl.value = "freelance";
     const msgEl = document.getElementById("cf-msg");
-    const summary = CALC_SERVICOS.map(s => {
+    const lista = servicosAtivos.length > 0 ? servicosAtivos : CALC_SERVICOS;
+    const summary = lista.map(s => {
       const preco = calcPrice(s, ranges[s.id]);
       const nivel = getLevel(s, ranges[s.id]);
       return `${s.label} (${nivel?.label}): ${formatCurrency(preco)}`;
@@ -543,44 +592,67 @@ function Servicos() {
           <div className="calc-sliders">
             {CALC_SERVICOS.map(s => {
               const val = ranges[s.id];
+              const ativo = ativos[s.id];
               const preco = calcPrice(s, val);
               const nivel = getLevel(s, val);
               const pct = ((val - 0) / 100) * 100;
 
               return (
-                <div key={s.id} className="calc-item">
+                <div key={s.id} className={`calc-item${ativo ? " calc-item--ativo" : ""}`}>
                   <div className="calc-item-top">
-                    <div>
-                      <p className="calc-item-label">{s.label}</p>
-                      <p className="calc-item-level">
-                        <span className="calc-level-dot" />
-                        {nivel?.label} {nivel?.desc}
-                      </p>
+                    <div className="calc-item-label-wrap">
+                      <button
+                        className={`calc-toggle${ativo ? " calc-toggle--on" : ""}`}
+                        onClick={() => toggleAtivo(s.id)}
+                        aria-pressed={ativo}
+                        aria-label={`${ativo ? "Remover" : "Adicionar"} ${s.label}`}
+                      >
+                        <span className="calc-toggle-track">
+                          <span className="calc-toggle-thumb" />
+                        </span>
+                      </button>
+                      <div>
+                        <p className="calc-item-label">{s.label}</p>
+                        {ativo && (
+                          <p className="calc-item-level">
+                            <span className="calc-level-dot" />
+                            {nivel?.label} — {nivel?.desc}
+                          </p>
+                        )}
+                      </div>
                     </div>
                     <div className="calc-item-price">
-                      <span className="calc-price-value">{formatCurrency(preco)}</span>
-                      <span className="calc-price-range">
-                        {formatCurrency(s.min)} – {formatCurrency(s.max)}
-                      </span>
+                      {ativo ? (
+                        <>
+                          <span className="calc-price-value">{formatCurrency(preco)}</span>
+                          <span className="calc-price-range">
+                            {formatCurrency(s.min)} – {formatCurrency(s.max)}
+                          </span>
+                        </>
+                      ) : (
+                        <span className="calc-price-off">não selecionado</span>
+                      )}
                     </div>
                   </div>
 
-                  <div className="calc-range-wrap">
-                    <input
-                      type="range"
-                      min="0"
-                      max="100"
-                      value={val}
-                      onChange={e => setRange(s.id, e.target.value)}
-                      className="calc-range"
-                      style={{ "--pct": `${pct}%` }}
-                    />
-                    <div className="calc-range-labels">
-                      <span>Simples</span>
-                      <span>Intermediário</span>
-                      <span>Avançado</span>
+                  {ativo && (
+                    <div className="calc-range-wrap">
+                      <input
+                        type="range"
+                        min="0"
+                        max="100"
+                        value={val}
+                        onChange={e => setRange(s.id, e.target.value)}
+                        className="calc-range"
+                        style={{ "--pct": `${pct}%` }}
+                      />
+                      <div className="calc-range-labels">
+                        <span>Simples</span>
+                        <span>Intermediário</span>
+                        <span>Avançado</span>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               );
             })}
@@ -588,11 +660,17 @@ function Servicos() {
 
           <div className="calc-total">
             <p className="calc-total-label">// Estimativa total do projeto</p>
-            <p className="calc-total-value">
-              {formatCurrency(
-                CALC_SERVICOS.reduce((acc, s) => acc + calcPrice(s, ranges[s.id]), 0)
-              )}
-            </p>
+            {servicosAtivos.length > 0 ? (
+              <p className="calc-total-value">
+                {formatCurrency(
+                  servicosAtivos.reduce((acc, s) => acc + calcPrice(s, ranges[s.id]), 0)
+                )}
+              </p>
+            ) : (
+              <p className="calc-total-value calc-total-empty">
+                Selecione ao menos um serviço
+              </p>
+            )}
             <p className="calc-total-note">
               * Valor estimado. O preço real é definido após entender seu projeto.
             </p>
@@ -603,8 +681,68 @@ function Servicos() {
   );
 }
 
+/* Galeria, obg Claude.. Fiquei horas para fazer uma má versão dessa galeria e vc me salvou kkkk */
+function Gallery({ project, onClose }) {
+  const [current, setCurrent] = useState(0);
+  const photos = project.photos || [];
+  const total = photos.length;
+
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === "Escape") onClose();
+      if (e.key === "ArrowRight") setCurrent(i => (i + 1) % total);
+      if (e.key === "ArrowLeft")  setCurrent(i => (i - 1 + total) % total);
+    };
+    document.body.style.overflow = "hidden";
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = "";
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [total, onClose]);
+
+  return (
+    <div className="gallery-overlay" onClick={onClose}>
+      <div className="gallery-modal" onClick={e => e.stopPropagation()}>
+        <div className="gallery-header">
+          <div>
+            <p className="gallery-name">{project.name}</p>
+            <p className="gallery-counter">{current + 1} / {total}</p>
+          </div>
+          <button className="gallery-close" onClick={onClose} aria-label="Fechar galeria">✕</button>
+        </div>
+
+        <div className="gallery-img-wrap">
+          <img
+            key={current}
+            src={photos[current]}
+            alt={`${project.name} – foto ${current + 1}`}
+            className="gallery-img"
+          />
+          {total > 1 && (
+            <>
+              <button className="gallery-nav gallery-nav--prev" onClick={() => setCurrent(i => (i - 1 + total) % total)} aria-label="Foto anterior">‹</button>
+              <button className="gallery-nav gallery-nav--next" onClick={() => setCurrent(i => (i + 1) % total)} aria-label="Próxima foto">›</button>
+            </>
+          )}
+        </div>
+
+        {total > 1 && (
+          <div className="gallery-dots">
+            {photos.map((_, i) => (
+              <button key={i} className={`gallery-dot${i === current ? " active" : ""}`} onClick={() => setCurrent(i)} aria-label={`Foto ${i + 1}`} />
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 /* Meus Projetos */
 function Projects() {
+  const [gallery, setGallery] = useState(null);
+
   return (
     <section id="projetos" className="projects-bg">
       <div className="section">
@@ -612,26 +750,42 @@ function Projects() {
         <h2 className="section-title reveal">Projetos<br />selecionados.</h2>
 
         <div className="projects-list">
-          {PROJECTS.map(({ id, num, name, desc, tech, link, img, LogoFallback }) => (
-            <div key={id} className="project-item reveal">
-              <div>
-                <p className="project-num">{num}</p>
-                <h3 className="project-name">{name}</h3>
-                <p className="project-desc">{desc}</p>
-                <div className="project-tech">
-                  {tech.map((t) => (<span key={t} className="project-tag">{t}</span>))}
+          {PROJECTS.map((project) => {
+            const { id, num, name, desc, tech, link, img, LogoFallback, photos } = project;
+            return (
+              <div
+                key={id}
+                className="project-item reveal"
+                onClick={() => photos?.length && setGallery(project)}
+                style={{ cursor: photos?.length ? "pointer" : "default" }}
+              >
+                <div>
+                  <p className="project-num">{num}</p>
+                  <h3 className="project-name">{name}</h3>
+                  <p className="project-desc">{desc}</p>
+                  <div className="project-tech">
+                    {tech.map((t) => (<span key={t} className="project-tag">{t}</span>))}
+                  </div>
+                  <div className="project-actions">
+                    {photos?.length && (
+                      <button className="project-photos-btn" onClick={e => { e.stopPropagation(); setGallery(project); }}>
+                        <IconPhotos /> {photos.length} fotos
+                      </button>
+                    )}
+                    {link && (
+                      <a href={link} target="_blank" rel="noreferrer" className="project-link" onClick={e => e.stopPropagation()}>Ver projeto</a>
+                    )}
+                  </div>
                 </div>
-                {link && (
-                  <a href={link} target="_blank" rel="noreferrer" className="project-link">Ver projeto</a>
-                )}
+                <div className="project-logo-wrap">
+                  <ProjectLogo img={img} alt={name} Fallback={LogoFallback} />
+                </div>
               </div>
-              <div className="project-logo-wrap">
-                <ProjectLogo img={img} alt={name} Fallback={LogoFallback} />
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
+      {gallery && <Gallery project={gallery} onClose={() => setGallery(null)} />}
     </section>
   );
 }
@@ -640,6 +794,36 @@ function ProjectLogo({ img, alt, Fallback }) {
   const [broken, setBroken] = useState(false);
   if (broken) return <Fallback />;
   return <img src={img} alt={alt} onError={() => setBroken(true)} style={{ width: "100%", height: "100%", objectFit: "contain" }} />;
+}
+
+/*PROCESSO */
+const PROCESSO_STEPS = [
+  { num: "01", title: "Análise de Requisitos",        desc: "Você me conta a ideia, o problema e os objetivos. Pode ser por mensagem ou uma call rápida." },
+  { num: "02", title: "Proposta",        desc: "Em até 24h envio escopo detalhado, prazo e valor. Sem surpresas depois." },
+  { num: "03", title: "Desenvolvimento", desc: "Construção com atualizações semanais. Você acompanha cada etapa." },
+  { num: "04", title: "Entrega",         desc: "Deploy em produção, testes completos e suporte pós-entrega." },
+];
+
+function Processo() {
+  return (
+    <section className="processo-bg">
+      <div className="section">
+        <div className="section-label"><span className="section-num">//</span> Como trabalho</div>
+        <h2 className="section-title reveal">Tudo começa<br /><em>no Dialógo.</em></h2>
+
+        <div className="processo-steps">
+          {PROCESSO_STEPS.map((step, i) => (
+            <div key={step.num} className="processo-step reveal">
+              <div className="processo-num">{step.num}</div>
+              {i < PROCESSO_STEPS.length - 1 && <div className="processo-connector" />}
+              <h3 className="processo-title">{step.title}</h3>
+              <p className="processo-desc">{step.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
 }
 
 /* SOBRE */
@@ -800,6 +984,9 @@ function Contato() {
 }
 
 /* ICONES */
+function IconPhotos() {
+  return (<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>);
+}
 function IconArrow() {
   return (<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 17l9.2-9.2M17 17V7H7" /></svg>);
 }
@@ -880,6 +1067,7 @@ export default function App() {
       <Skills />
       <Servicos />
       <Projects />
+      <Processo />
       <Sobre />
       <Contato />
     </>
